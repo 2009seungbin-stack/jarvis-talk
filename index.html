@@ -155,7 +155,7 @@ body.notes-open .nav { bottom: calc(36vh + 16px); }
 <div class="brand" aria-hidden="true"><span class="live"></span><b>JARVIS</b><span>DEV LOG 10.06 — 10.29</span></div>
 <nav class="nav" aria-label="발표 이동">
   <button id="prev" aria-label="이전 장">←</button>
-  <span class="count" id="count"><b>01</b> / 24</span>
+  <span class="count" id="count"><b>01</b> / 25</span>
   <button id="next" aria-label="다음 장">→</button>
   <button id="nbtn" class="tx" aria-label="발표자 노트 (N)">노트</button>
   <button id="fs" aria-label="전체 화면">⤢</button>
@@ -171,7 +171,7 @@ body.notes-open .nav { bottom: calc(36vh + 16px); }
   </header>
   <aside class="notes"><ul>
     <li>3주 동안 직접 만든 AI 비서 자비스의 탐구 과정을 발표하겠습니다.</li>
-    <li>뒤의 캐릭터와 화면은 전부 실제 자비스에서 가져온 것입니다.</li>
+    <li>가운데 슬라임은 자비스의 기본 비서 캐릭터 '닷'을 3D로 옮긴 것이고, 레일 위 화면들은 실제 스크린샷입니다.</li>
   </ul></aside>
 </section>
 
@@ -179,12 +179,12 @@ body.notes-open .nav { bottom: calc(36vh + 16px); }
   <header><span class="kicker">목차</span><h2>탐구 순서</h2></header>
   <div class="stage"><div class="toc">
     <div><b>Ⅰ</b><span>탐구 동기</span><small>왜 만들었나</small></div>
-    <div><b>Ⅴ</b><span>탐구 과정</span><small>3주의 개발, 문제와 진단, 설계 변경</small></div>
+    <div><b>Ⅴ</b><span>탐구 과정</span><small>3주의 개발, 문제와 진단, 설계 변경과 새 부품</small></div>
     <div><b>Ⅱ</b><span>탐구 목표</span><small>탐구 질문과 목표 기능</small></div>
-    <div><b>Ⅵ</b><span>탐구 결과</span><small>완성된 시스템의 원리, 시연, 숫자</small></div>
+    <div><b>Ⅵ</b><span>탐구 결과</span><small>시연, 목표 달성 확인, 숫자</small></div>
     <div><b>Ⅲ</b><span>이론적 배경</span><small>AI 에이전트와 도구 호출</small></div>
     <div><b>Ⅶ</b><span>고찰</span><small>안전성과 한계</small></div>
-    <div><b>Ⅳ</b><span>탐구 방법</span><small>시스템 설계와 사용한 프로그램</small></div>
+    <div><b>Ⅳ</b><span>탐구 방법</span><small>시스템 설계, 사용한 프로그램, 부분별 작동 원리</small></div>
     <div><b>Ⅷ</b><span>결론</span><small>탐구 질문에 대한 답과 향후 과제</small></div>
   </div></div>
   <aside class="notes"><ul>
@@ -216,12 +216,12 @@ body.notes-open .nav { bottom: calc(36vh + 16px); }
       <div><b>① 말로 시키고 말로 듣기</b><span>받아쓰기, 목소리, 호출어</span></div>
       <div><b>② 실제 컴퓨터 조작</b><span>브라우저, 프로그램, 파일을 직접 다루기</span></div>
       <div><b>③ 보이고, 멈출 수 있게</b><span>하는 일을 실시간으로 보고, 위험한 일은 묻고, 언제든 중단</span></div>
-      <div><b>④ 표정이 있는 비서</b><span>말에 맞춰 표정과 몸짓을 하는 캐릭터</span></div>
+      <div><b>④ 살아 있는 비서</b><span>듣기·생각·작업·말하기 상태가 한눈에 보이는 캐릭터</span></div>
     </div>
   </div>
   <aside class="notes"><ul>
     <li>탐구 질문은 "AI가 말로 시킨 일을 스스로 끝까지 처리하게 하려면 무엇이 필요한가"입니다.</li>
-    <li>목표 기능 네 가지: 음성 대화, 실제 컴퓨터 조작, 투명성과 안전장치, 캐릭터.</li>
+    <li>목표 기능 네 가지: 음성 대화, 실제 컴퓨터 조작, 투명성과 안전장치, 상태가 보이는 캐릭터.</li>
     <li>평가 기준: 실제 과제(예: 웹에서 정보를 찾아 엑셀로 정리)를 사람 도움 없이 끝까지 하는가.</li>
   </ul></aside>
 </section>
@@ -269,11 +269,53 @@ body.notes-open .nav { bottom: calc(36vh + 16px); }
     <b class="a">화면 조작</b><code>xdotool · ImageMagick · xclip</code><span>스크린샷, 마우스·키보드, 한글 붙여넣기</span>
     <b class="a">화면 송출</b><code>x11vnc · noVNC 1.7</code><span>Linux 화면을 앱 패널로 실시간</span>
     <b class="u">목소리</b><code>Supertonic 3 (ONNX)</code><span>CPU에서 문장마다 음성 생성</span>
-    <b class="g">캐릭터</b><code>three.js · three-vrm 3.5</code><span>VRM 뼈대·표정, 입모양 맞추기</span>
+    <b class="g">캐릭터</b><code>Canvas 2D (닷)</code><span>상태별 색과 스프링으로 출렁이는 말랑한 공</span>
   </div></div>
   <aside class="notes"><ul>
     <li>전부 공개된 프로그램이고, 직접 만든 부분은 이들을 잇는 Python 서버, 앱 화면, 에이전트 연결부, 화면 조작 도구, 안전장치입니다.</li>
-    <li>AI 모델과 에이전트 엔진은 탐구 과정에서 바뀌었습니다. 다음 장에서 그 과정을 봅니다.</li>
+    <li>다음 장부터 처음부터 그대로인 부분(듣기, 자기 컴퓨터, 목소리, 캐릭터)의 작동 원리를 봅니다. AI 모델과 에이전트 엔진은 탐구 과정에서 바뀌었기 때문에 과정에서 다룹니다.</li>
+  </ul></aside>
+</section>
+
+<section class="slide" data-t="Ⅳ 듣기" data-cam="panel:listen">
+  <header><span class="kicker u">Ⅳ 탐구 방법 · 작동 원리 · 듣기</span><h2>소리가 글자가 되기까지</h2></header>
+  <div class="cap"><span class="u"><b>0.03초</b>VAD 판단 단위</span><span><b>574MB</b>large-v3-turbo q5_0</span><span><b>32 → 4층</b>turbo 디코더</span></div>
+  <aside class="notes"><ul>
+    <li>Silero VAD가 앱 안에서 약 0.03초 조각마다 사람 말일 확률을 매겨, 말소리 구간만 잘라 보냅니다(앞 0.3초 포함).</li>
+    <li>whisper가 소리를 스펙트로그램으로 바꾸고, 트랜스포머 인코더가 특징을 뽑고, 디코더가 토큰을 하나씩 예측합니다.</li>
+    <li>turbo는 디코더를 32층에서 4층으로 줄인 버전, q5_0은 5비트 양자화로 약 1.6GB → 574MB.</li>
+    <li>호출어는 받아쓴 글이 "자비스"로 시작하는지 규칙으로 검사. 대답 뒤 20초는 생략 가능.</li>
+  </ul></aside>
+</section>
+
+<section class="slide" data-t="Ⅳ 자기 컴퓨터" data-cam="panel:linux">
+  <header><span class="kicker u">Ⅳ 탐구 방법 · 작동 원리 · 자기 컴퓨터</span><h2>Windows 안에 AI 전용 Linux</h2></header>
+  <div class="cap"><span class="a"><b>WSL2</b>가벼운 가상 머신</span><span><b>Xvfb :7</b>모니터 없는 1600×900</span><span class="g"><b>noVNC</b>앱에서 실시간으로 보기</span></div>
+  <aside class="notes"><ul>
+    <li>WSL2 배포판 Jarvis-Ubuntu. Windows 드라이브 연결 없음, Windows 프로그램 실행 불가, 일반 사용자, 별도 네트워크.</li>
+    <li>Xvfb가 가상 화면을 만들고, openbox 위에 전용 Chrome과 LibreOffice.</li>
+    <li>x11vnc가 화면을 내보내고 noVNC가 앱 패널에 보여줍니다. '직접 조작'을 누르면 내가 조작.</li>
+  </ul></aside>
+</section>
+
+<section class="slide" data-t="Ⅳ 목소리" data-cam="panel:voice">
+  <header><span class="kicker u">Ⅳ 탐구 방법 · 작동 원리 · 목소리</span><h2>첫 문장부터 바로 말한다</h2></header>
+  <div class="cap"><span class="ok"><b>1.07초</b>짧은 문장 생성</span><span><b>2.44초</b>8~9초 음성 생성</span><span class="u"><b>CPU</b>GPU는 받아쓰기에</span></div>
+  <aside class="notes"><ul>
+    <li>답이 흘러오는 동안 문장 단위로 잘라, 첫 문장이 완성되면 바로 합성·재생합니다.</li>
+    <li>Supertonic 3: 길이 예측 → 음색 스타일 → 6단계 다듬기(flow matching) → 파형.</li>
+    <li>음색 JarvisBlend는 목소리 샘플로 만든 스타일. 유사도 0.30 → 0.87.</li>
+  </ul></aside>
+</section>
+
+<section class="slide" data-t="Ⅳ 캐릭터" data-cam="panel:dot">
+  <header><span class="kicker u">Ⅳ 탐구 방법 · 작동 원리 · 캐릭터</span><h2>상태를 색과 출렁임으로 보여준다</h2></header>
+  <div class="cap"><span class="g"><b>5가지</b>상태마다 다른 색</span><span><b>스프링</b>말랑하게 따라가는 움직임</span><span class="u"><b>목소리 크기</b>= 출렁임 크기</span></div>
+  <aside class="notes"><ul>
+    <li>자비스의 기본 비서는 '닷'이라는 말랑한 공입니다. 가운데 슬라임이 이 닷을 3D로 옮긴 것입니다.</li>
+    <li>상태마다 색이 바뀝니다: 대기 파랑, 듣기 초록, 생각 보라, 작업 주황, 말하기 하늘색. 생각·작업 중에는 작은 불꽃이 주위를 돕니다.</li>
+    <li>크기와 색은 스프링 계산(목표값으로 당기는 힘 − 속도에 비례한 감쇠)으로 움직여서 딱딱하게 바뀌지 않고 말랑하게 따라갑니다.</li>
+    <li>윤곽은 원 위에 속도가 다른 물결 3개를 겹쳐 72개 점으로 매 프레임 다시 그립니다. 물결 높이는 말할 때 목소리 크기, 들을 때 마이크 크기를 따릅니다.</li>
   </ul></aside>
 </section>
 
@@ -282,7 +324,7 @@ body.notes-open .nav { bottom: calc(36vh + 16px); }
   <div class="cap"><span class="u"><b>10.06</b>내 PC의 Qwen 35B</span><span><b>10.09</b>Flash-Next 125B</span><span class="a"><b>10.14</b>Claude API</span><span class="ok"><b>10.29</b>Agent SDK로 전환</span></div>
   <aside class="notes"><ul>
     <li>레일 위 화면들이 날짜순 실제 스크린샷입니다.</li>
-    <li>10.06 llama.cpp로 Qwen 35B, 에이전트는 Goose + 정책 게이트웨이. 10.07 VRM 캐릭터와 호출어, Qwen 9B(94.6 tok/s). 10.08 AI 전용 Linux.</li>
+    <li>10.06 llama.cpp로 Qwen 35B, 에이전트는 Goose + 정책 게이트웨이. 10.07 바탕화면 비서와 호출어, Qwen 9B(94.6 tok/s). 10.08 AI 전용 Linux.</li>
     <li>10.09 작업 창, Flash-Next 125B(MoE, 47.7 tok/s). 10.10 캐릭터 배치. 10.14 내 PC 모델로는 실수가 많아 Claude API로(claude_bridge로 형식 변환).</li>
     <li>그 과정에서 가장 크게 막혔던 두 장면을 보겠습니다.</li>
   </ul></aside>
@@ -328,23 +370,12 @@ body.notes-open .nav { bottom: calc(36vh + 16px); }
     <li>새 원칙: AI 전용 컴퓨터 안에서는 자유, 바깥에 영향을 주는 일만 사람에게 묻기.</li>
     <li>순서: Linux 전체 백업(3.34GB) → 관리자 권한 → Claude Agent SDK 설치 → 화면 조작 도구 → 질문 도구 → 지침서 CLAUDE.md → Opus 5.5 · high → 앱 연결.</li>
     <li>설정 하나로 예전 방식으로 돌아갈 수 있게 해 두었고, 자동 시험 311개 통과.</li>
-    <li>이렇게 완성된 시스템을 결과에서 하나씩 봅니다.</li>
+    <li>이때 새로 만든 두 부품, 에이전트 엔진과 화면 조작 도구를 이어서 보겠습니다.</li>
   </ul></aside>
 </section>
 
-<section class="slide" data-t="Ⅵ 듣기" data-cam="panel:listen">
-  <header><span class="kicker ok">Ⅵ 탐구 결과 · 듣기</span><h2>소리가 글자가 되기까지</h2></header>
-  <div class="cap"><span class="u"><b>0.03초</b>VAD 판단 단위</span><span><b>574MB</b>large-v3-turbo q5_0</span><span><b>32 → 4층</b>turbo 디코더</span></div>
-  <aside class="notes"><ul>
-    <li>Silero VAD가 앱 안에서 약 0.03초 조각마다 사람 말일 확률을 매겨, 말소리 구간만 잘라 보냅니다(앞 0.3초 포함).</li>
-    <li>whisper가 소리를 스펙트로그램으로 바꾸고, 트랜스포머 인코더가 특징을 뽑고, 디코더가 토큰을 하나씩 예측합니다.</li>
-    <li>turbo는 디코더를 32층에서 4층으로 줄인 버전, q5_0은 5비트 양자화로 약 1.6GB → 574MB.</li>
-    <li>호출어는 받아쓴 글이 "자비스"로 시작하는지 규칙으로 검사. 대답 뒤 20초는 생략 가능.</li>
-  </ul></aside>
-</section>
-
-<section class="slide" data-t="Ⅵ 에이전트 엔진" data-cam="panel:sdk">
-  <header><span class="kicker ok">Ⅵ 탐구 결과 · 에이전트 엔진</span><h2>Claude Code 엔진을 통째로 넣었다</h2></header>
+<section class="slide" data-t="Ⅴ 새 에이전트 엔진" data-cam="panel:sdk">
+  <header><span class="kicker bad">Ⅴ 탐구 과정 · 새로 만든 것 ① 에이전트 엔진</span><h2>Claude Code 엔진을 통째로 넣었다</h2></header>
   <div class="cap"><span class="a"><b>Agent SDK</b>0.2.174</span><span><b>Opus 5.5</b>effort high</span><span class="g"><b>JSON lines</b>stdin · stdout</span></div>
   <aside class="notes"><ul>
     <li>Windows가 wsl.exe로 Linux 안의 jarvis_agent.py --serve를 켜고, JSON 한 줄씩 주고받습니다.</li>
@@ -354,43 +385,14 @@ body.notes-open .nav { bottom: calc(36vh + 16px); }
   </ul></aside>
 </section>
 
-<section class="slide" data-t="Ⅵ 자기 컴퓨터" data-cam="panel:linux">
-  <header><span class="kicker ok">Ⅵ 탐구 결과 · 자기 컴퓨터</span><h2>Windows 안에 AI 전용 Linux</h2></header>
-  <div class="cap"><span class="a"><b>WSL2</b>가벼운 가상 머신</span><span><b>Xvfb :7</b>모니터 없는 1600×900</span><span class="g"><b>noVNC</b>앱에서 실시간으로 보기</span></div>
-  <aside class="notes"><ul>
-    <li>WSL2 배포판 Jarvis-Ubuntu. Windows 드라이브 연결 없음, Windows 프로그램 실행 불가, 일반 사용자, 별도 네트워크.</li>
-    <li>Xvfb가 가상 화면을 만들고, openbox 위에 전용 Chrome과 LibreOffice.</li>
-    <li>x11vnc가 화면을 내보내고 noVNC가 앱 패널에 보여줍니다. '직접 조작'을 누르면 내가 조작.</li>
-  </ul></aside>
-</section>
-
-<section class="slide" data-t="Ⅵ 화면 조작" data-cam="panel:computer">
-  <header><span class="kicker ok">Ⅵ 탐구 결과 · 화면 조작</span><h2>찍고, 좌표를 계산하고, 누른다</h2></header>
+<section class="slide" data-t="Ⅴ 새 화면 조작 도구" data-cam="panel:computer">
+  <header><span class="kicker bad">Ⅴ 탐구 과정 · 새로 만든 것 ② 화면 조작 도구</span><h2>찍고, 좌표를 계산하고, 누른다</h2></header>
   <div class="cap"><span><b>1280×720</b>AI가 보는 크기</span><span class="u"><b>×1.25</b>실제 화면 좌표로</span><span class="ok"><b>0.6초</b>뒤 다시 찍어 확인</span></div>
   <aside class="notes"><ul>
     <li>직접 만든 computer 도구: 스크린샷, 클릭, 더블클릭, 드래그, 입력, 단축키, 스크롤.</li>
     <li>1600×900을 찍어 1280×720으로 줄여 AI에게 → AI가 좌표를 답하면 1.25배 → xdotool로 입력 → 0.6초 뒤 다시 찍어 확인.</li>
     <li>한글은 클립보드(xclip)로 붙여넣기. 정확한 값이 필요하면 Chrome에서 페이지를 직접 읽음.</li>
-  </ul></aside>
-</section>
-
-<section class="slide" data-t="Ⅵ 목소리" data-cam="panel:voice">
-  <header><span class="kicker ok">Ⅵ 탐구 결과 · 목소리</span><h2>첫 문장부터 바로 말한다</h2></header>
-  <div class="cap"><span class="ok"><b>1.07초</b>짧은 문장 생성</span><span><b>2.44초</b>8~9초 음성 생성</span><span class="u"><b>CPU</b>GPU는 받아쓰기에</span></div>
-  <aside class="notes"><ul>
-    <li>답이 흘러오는 동안 문장 단위로 잘라, 첫 문장이 완성되면 바로 합성·재생합니다.</li>
-    <li>Supertonic 3: 길이 예측 → 음색 스타일 → 6단계 다듬기(flow matching) → 파형.</li>
-    <li>음색 JarvisBlend는 목소리 샘플로 만든 스타일. 유사도 0.30 → 0.87.</li>
-  </ul></aside>
-</section>
-
-<section class="slide" data-t="Ⅵ 캐릭터" data-cam="panel:vrm">
-  <header><span class="kicker ok">Ⅵ 탐구 결과 · 캐릭터</span><h2>목소리에 맞춰 입과 몸이 움직인다</h2></header>
-  <div class="cap"><span class="g"><b><code>[[기쁨 손흔들기]]</code></b>AI가 쓰는 연기 태그</span><span><b>21가지</b>동작</span><span><b>0.07~0.13초</b>마다 입모양 바꾸기</span></div>
-  <aside class="notes"><ul>
-    <li>VRM 파일 = 사람 뼈대 + 표정 + 머리카락·옷 흔들림 + 재질. three-vrm이 읽고 three.js가 그립니다.</li>
-    <li>입모양: 목소리 크기만큼 입을 벌리고 모음 모양을 계속 바꿈. 눈은 2~6초마다 깜박임.</li>
-    <li>AI가 문장 앞에 연기 태그를 쓰면, 그 문장이 재생될 때 표정과 동작이 같이 나옵니다.</li>
+    <li>이 구조로 실제 과제를 시켜 본 것이 탐구 결과입니다.</li>
   </ul></aside>
 </section>
 
@@ -401,7 +403,24 @@ body.notes-open .nav { bottom: calc(36vh + 16px); }
     <li>평가 과제: 네이버 서울 날씨를 보고 시간대별 기온과 강수 확률을 엑셀로 정리하고, 열어서 확인.</li>
     <li>한 일: 검색 → Enter가 안 먹힌 걸 화면으로 보고 다시 누름 → 강수 탭 클릭 → 엑셀 생성 → 코드로 다시 읽어 검증 → Calc로 열어서 확인.</li>
     <li>스스로 한 일: Playwright 설치, 페이지에서 숫자 직접 읽기, 50% 이상 빨간 칸과 요약 시트, 재사용 스크립트 저장, 요령 메모.</li>
-    <li>목표 기능 ②를 사람 도움 없이 달성.</li>
+    <li>사람 도움 없이 끝까지 해냈습니다. 목표 기능별로 정리하면 다음 장과 같습니다.</li>
+  </ul></aside>
+</section>
+
+<section class="slide" data-t="Ⅵ 목표 달성" data-cam="end">
+  <header><span class="kicker ok">Ⅵ 탐구 결과 · 목표 달성 확인</span><h2>목표 기능 네 가지를 확인했다</h2></header>
+  <div class="stage"><div class="cards">
+    <div><b>① 말로 시키고 말로 듣기 <span class="ok">✓</span></b><span>호출어 → 받아쓰기 → 문장마다 바로 목소리. 짧은 문장 1.07초에 음성 생성</span></div>
+    <div><b>② 실제 컴퓨터 조작 <span class="ok">✓</span></b><span>날씨 → 엑셀 과제를 126초, 20번 반복으로 사람 도움 없이 끝냄</span></div>
+    <div><b>③ 보이고, 멈출 수 있게 <span class="ok">✓</span></b><span>앱에서 Linux 화면을 실시간으로 보고, 질문 카드로 묻고, "작업 멈춰"로 중단</span></div>
+    <div><b>④ 살아 있는 비서 <span class="ok">✓</span></b><span>닷 캐릭터가 듣기·생각·작업·말하기를 색과 출렁임으로 표시</span></div>
+  </div></div>
+  <aside class="notes"><ul>
+    <li>① 음성: 호출어, 받아쓰기(whisper), 문장 단위 음성 합성까지 동작.</li>
+    <li>② 조작: 시연 과제를 혼자 끝까지. 화면+질문 카드 시험은 43초, 13번 반복, $0.17.</li>
+    <li>③ 투명성·안전: Linux 화면 실시간 패널, 질문 카드(ask_user), 직접 조작 시 일시정지, "작업 멈춰".</li>
+    <li>④ 캐릭터: 닷이 상태별 색과 목소리에 맞춘 출렁임으로 표시.</li>
+    <li>단, 앱에서 말로 시키는 전체 흐름을 새 엔진으로 끝까지 확인하는 일은 남아 있습니다(고찰에서).</li>
   </ul></aside>
 </section>
 
@@ -747,17 +766,17 @@ body.notes-open .nav { bottom: calc(36vh + 16px); }
     { id: 'linux', rail: -1, items: [{ diag: { title: '자기 컴퓨터', rows: [[['Windows 11', '내 컴퓨터', U], ['WSL2', '가벼운 가상 머신', A], ['Ubuntu', 'Jarvis-Ubuntu', A]], [['Xvfb :7', '모니터 없는 화면', A], ['openbox', '창 관리자', A], ['Chrome · Office', 'CDP 9333', A]], [['x11vnc', 'VNC :5907', G], ['noVNC 1.7', '웹에서 VNC', G], ['앱 패널', '보기 · 직접 조작', U]]], notes: [] } }], color: C.ai, date: '자기 컴퓨터' },
     { id: 'computer', rail: -1, items: [{ diag: { title: '화면 조작', rows: [[['찍기', '1600×900', A], ['줄이기', '1280×720', A], ['AI 판단', '(640, 300)', K]], [['×1.25', '(800, 375)', U], ['xdotool', '클릭 · 키 · 스크롤', A], ['0.6초 뒤', '다시 찍기', K]]], notes: [['한글 입력: xclip 클립보드 → Ctrl+V', M], ['정확한 값: Chrome CDP로 페이지 직접 읽기', M]] } }], color: C.ai, date: '화면 조작' },
     { id: 'voice', rail: -1, items: [{ diag: { title: '목소리', rows: [[['AI 답', '흘러오는 글', A], ['문장 나누기', '태그는 따로', U], ['길이 예측', '', U]], [['음색 스타일', 'JarvisBlend', G], ['6단계 다듬기', 'flow matching', U], ['파형 → 재생', '+ 표정 · 동작', K]]], notes: [['Supertonic 3 · ONNX · CPU 4스레드', M], ['8~9초 음성을 2.44초에 생성  ·  짧은 문장 1.07초', K]] } }], color: C.user, date: '목소리' },
-    { id: 'vrm', rail: -1, items: [{ diag: { title: '캐릭터', rows: [[['VRM 파일', '뼈대 · 표정 · 재질', G], ['three-vrm', '파일 읽기', G], ['three.js', '매 프레임 그리기', G]], [['목소리 크기', '→ 입 벌림', U], ['모음 바꾸기', '0.07~0.13초', U], ['연기 태그', '표정 + 동작 21가지', A]]], notes: [['눈 깜박임 2~6초마다 · 동작은 뼈 각도 키프레임 + 보간', M]] } }], color: C.gate, date: '캐릭터' },
+    { id: 'dot', rail: -1, items: [{ diag: { title: '캐릭터 (닷)', rows: [[['앱 상태', '듣기 · 생각 · 작업 · 말하기', A], ['상태별 색', '초록 · 보라 · 주황 · 하늘', G], ['스프링', '부드럽게 따라감', U]], [['목소리 크기', '말할 때 커짐', U], ['물결 3개', '서로 다른 속도', G], ['말랑한 출렁임', '생각 중엔 불꽃이 돎', K]]], notes: [['Canvas 2D · 매 프레임 72개 점으로 윤곽 계산', M], ['대기 파랑 · 듣기 초록 · 생각 보라 · 작업 주황 · 말하기 하늘', M]] } }], color: C.gate, date: '캐릭터' },
     { id: 'start', items: [{ text: [['$ START-JARVIS.bat', M], ['[모델]  llama.cpp · Qwen 35B (내 그래픽카드)', T], ['[반복]  Goose 1.53 + 안전 관문(게이트웨이)', T], ['[조작]  브라우저 · Windows 프로그램 조작', T], ['[음성]  whisper.cpp 받아쓰기', T], ['[음성]  Supertonic 3 목소리', T], ['[막힘]  한글 입력이 깨짐 → 직접 다시 만듦', B], ['[화면]  127.0.0.1:8180  준비 완료', K]], title: 'jarvis · 2026-10-06' }], color: C.user, date: '10.06' },
-    { id: 'body', items: [{ text: [['비서 창   항상 화면 위', T], ['캐릭터    VRM 메이드', G], ['호출어    "자비스"', G], ['모델      Qwen 9B', A], ['속도      94.6 tok/s', K], ['시험      21개 중 19개 통과', K], ['램        32 → 64 GB', U], ['!! PC 멈춤 → 드라이버 메모리 누수', B]], title: 'jarvis · 2026-10-07' }], color: C.user, date: '10.07' },
+    { id: 'body', items: [{ text: [['비서 창   항상 화면 위', T], ['캐릭터    바탕화면 비서', G], ['호출어    "자비스"', G], ['모델      Qwen 9B', A], ['속도      94.6 tok/s', K], ['시험      21개 중 19개 통과', K], ['램        32 → 64 GB', U], ['!! PC 멈춤 → 드라이버 메모리 누수', B]], title: 'jarvis · 2026-10-07' }], color: C.user, date: '10.07' },
     { id: 'linuxfirst', items: [{ src: 'shots/linux-first.webp', a: 900 / 1600, cap: '10.08 19:25 · 자비스 컴퓨터의 첫 화면' }], color: C.ai, date: '10.08' },
     { id: 'appv1', items: [{ src: 'shots/app-v1.webp', a: 900 / 1400, cap: '10.09 01:01 · 작업 창 v1' }], color: C.user, date: '10.09' },
     { id: 'vision', items: [{ src: 'shots/vision-chart.webp', a: 900 / 1600, cap: '10.09 08:52 · 자비스가 그린 막대그래프' }], color: C.ai, date: '10.09' },
     { id: 'appv2', items: [{ src: 'shots/app-dots.webp', a: 900 / 1440, cap: '10.09 20:59 · 새 앱 화면' }], color: C.user, date: '10.09' },
     { id: 'fail', items: [{ src: 'shots/work-follow.webp', a: 900 / 1440, cap: '10.09 22:04 · 작업 따라가기' }, { src: 'shots/fail-ui.webp', a: 850 / 1100, cap: '10.09 · 실패 표시' }], color: C.user, date: '10.09' },
-    { id: 'adjust', items: [{ src: 'shots/avatar-adjust.webp', a: 920 / 1400, cap: '10.10 00:28 · 캐릭터 배치 모드' }], color: C.gate, date: '10.10' },
-    { id: 'wave', items: [{ holo: 'shots/avatar-wave.png', a: 294 / 753, cap: '손흔들기' }], color: C.gate, date: '10.14' },
-    { id: 'tilt', items: [{ holo: 'shots/avatar-tilt.png', a: 256 / 748, cap: '갸웃' }], color: C.gate, date: '10.17' },
+    { id: 'adjust', items: [{ text: [['[배치]  끌어서 옮기기 · 크기 조절 · 고정', T], ['[기억]  자리별로 위치를 따로 저장', T], ['[이어받기]  앱을 열면 앱 안 비서가 이어받음', G], ['[대화]  창이 바뀌어도 대화는 그대로', K]], title: 'jarvis · 2026-10-10' }], color: C.gate, date: '10.10' },
+    { id: 'wave', items: [{ text: [['[모델]  Claude API (claude_bridge로 형식 변환)', A], ['[승인]  작은 AI(Haiku)가 자동 승인 검사', T], ['[예외]  결제 · 로그인 · 설치는 항상 사람에게', B], ['[연기]  대답 문장마다 캐릭터 동작 태그', G]], title: 'jarvis · 2026-10-14' }], color: C.ai, date: '10.14' },
+    { id: 'tilt', items: [{ text: [['[증상]  캐릭터 규칙이 반영되지 않음', B], ['[조사]  AI에게 가는 요청을 가로채 열어 봄', T], ['[원인]  규칙이 시스템 메시지에 없었음', U], ['[해결]  Goose 공식 기능으로 넣고 다시 확인', K], ['[시험]  311개 통과', K]], title: 'jarvis · 2026-10-17' }], color: C.gate, date: '10.17' },
     { id: 'prompt', items: [{ text: [['You are a general-purpose AI agent', B, 36, true], ['called goose, created by AAIF.', B, 36, true], ['Use Markdown formatting for all responses.', B, 34, true], ['[자비스 규칙] 마크다운·목록 없이 말한다', T, 34], ['[캐릭터] leftUpperArm z -70 …   24%', G, 34], ['model = sonnet   effort = low', U, 34], ['tools = 55   설명 22,990자', U, 34]], title: '10.29 · AI에게 실제로 간 요청' }], color: C.gate, date: '10.29' },
     { id: 'transplant', items: [{ text: [['① 백업          Linux 통째로 3.34GB', M, 36], ['② 관리자 권한    스스로 설치 가능', U, 36], ['③ Agent SDK     일하는 엔진을 안에', A, 36], ['④ 화면 도구     보고 → 좌표로 클릭', A, 36], ['⑤ 질문 도구     밖으로 나가기 전 묻기', G, 36], ['⑥ 지침서        CLAUDE.md', T, 36], ['⑦ 모델          Opus 5.5 · high', K, 36], ['⑧ 앱과 연결', T, 36]], title: '10.29 · 전환 순서' }], color: C.ai, date: '10.29' },
     { id: 'calc', items: [{ src: 'shots/live-calc.webp', a: 900 / 1600, cap: '10.29 23:59 · 자비스가 만든 서울날씨.xlsx' }], color: C.ai, date: '10.29' },
@@ -765,8 +784,69 @@ body.notes-open .nav { bottom: calc(36vh + 16px); }
 
   /* ---- avatar hologram above the start of the timeline ---- */
   const RAIL_Y = -9.5, V3 = (x, y, z) => new THREE.Vector3(x, y, z);
-  const top = holo(tex('shots/avatar-wave.png'), 6.2, 294 / 753, 'shots/avatar-wave.png', '자비스 · 실제 캐릭터 렌더');
-  top.position.set(0, .2, 0); scene.add(top);
+  /* the slime: Jarvis's default "dot" companion (a springy blob that changes colour by state) made 3D, with a face */
+  scene.add(new THREE.HemisphereLight(0xe4e9ff, 0x221433, .9));
+  const keyLight = new THREE.DirectionalLight(0xffffff, 1.15); keyLight.position.set(5, 9, 12); scene.add(keyLight);
+  const rimLight = new THREE.DirectionalLight(0xff5d8f, .9); rimLight.position.set(-8, 3, -6); scene.add(rimLight);
+  const SR = 2.7, FLAT = -.5 * SR, LIFT = .44 * SR;   // sphere radius, where the underside flattens, how far up the centre sits
+  const slime = new THREE.Group(); slime.position.y = -3; scene.add(slime);
+  const sGeo = new THREE.SphereGeometry(SR, 72, 48), sPos = sGeo.attributes.position, sBase = sPos.array.slice();
+  const sMat = new THREE.MeshPhysicalMaterial({ color: 0x8ea3ff, emissive: 0x1d2a8a, emissiveIntensity: .6, roughness: .18, clearcoat: 1, clearcoatRoughness: .08, transparent: true, opacity: .94 });
+  slime.add(new THREE.Mesh(sGeo, sMat));
+  // same outline idea as dot.html: three travelling waves whose height follows the voice
+  function shapeSlime(t, amp) {
+    for (let i = 0; i < sPos.count; i++) {
+      let x = sBase[i * 3], y = sBase[i * 3 + 1], z = sBase[i * 3 + 2];
+      const th = Math.atan2(z, x), h = y / SR;
+      const wob = 1 + amp * (.09 * Math.sin(th * 3 + t * 5.2 + h * 2) + .06 * Math.sin(th * 5 - t * 7.1) + .04 * Math.sin(h * 4 + t * 3.3));
+      const widen = 1 + .16 * (1 - (h + 1) / 2);
+      x *= wob * widen; z *= wob * widen; y *= wob;
+      if (y < FLAT) y = FLAT + (y - FLAT) * .12;
+      sPos.setXYZ(i, x, y + LIFT, z);
+    }
+    sPos.needsUpdate = true; sGeo.computeVertexNormals();
+  }
+  const face = new THREE.Group(); slime.add(face);
+  const eyes = [-1, 1].map(sd => {
+    const e = new THREE.Mesh(new THREE.SphereGeometry(.3, 24, 16), new THREE.MeshBasicMaterial({ color: 0x0b0e1c }));
+    e.scale.set(1, 1.35, .6); e.position.set(sd * .78, LIFT + .68, 2.6); face.add(e);
+    const hl = new THREE.Mesh(new THREE.SphereGeometry(.085, 12, 8), new THREE.MeshBasicMaterial({ color: 0xffffff }));
+    hl.position.set(sd * .78 - .09, LIFT + .82, 2.8); face.add(hl);
+    const cheek = new THREE.Mesh(new THREE.CircleGeometry(.24, 24), new THREE.MeshBasicMaterial({ color: 0xff7aa5, transparent: true, opacity: .5, depthWrite: false }));
+    cheek.position.set(sd * 1.38, LIFT + .28, 2.42); cheek.rotation.y = sd * .5; face.add(cheek);
+    return e;
+  });
+  const mouth = new THREE.Mesh(new THREE.TorusGeometry(.2, .045, 8, 24, Math.PI), new THREE.MeshBasicMaterial({ color: 0x0b0e1c }));
+  mouth.rotation.z = Math.PI; mouth.position.set(0, LIFT + .36, 2.66); face.add(mouth);
+  const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: dotTex, color: C.ai, transparent: true, opacity: .4, blending: THREE.AdditiveBlending, depthWrite: false }));
+  halo.scale.setScalar(12); halo.position.set(0, LIFT, -1.5); slime.add(halo);
+  const spark = new THREE.Sprite(new THREE.SpriteMaterial({ map: dotTex, color: 0xffffff, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false }));
+  spark.scale.setScalar(.9); slime.add(spark);
+  const footRing = new THREE.Mesh(new THREE.RingGeometry(3.3, 3.55, 72), new THREE.MeshBasicMaterial({ color: C.gate, transparent: true, opacity: .8, side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false }));
+  footRing.rotation.x = -Math.PI / 2; footRing.position.y = .02; slime.add(footRing);
+  const padGlow = new THREE.Mesh(new THREE.CircleGeometry(5, 64), new THREE.MeshBasicMaterial({ map: dotTex, color: C.gate, transparent: true, opacity: .4, blending: THREE.AdditiveBlending, depthWrite: false }));
+  padGlow.rotation.x = -Math.PI / 2; padGlow.position.y = .01; slime.add(padGlow);
+  // it walks through the dot's states: idle, listening, thinking, using a tool, speaking (hue, wobble)
+  const MOODS = [[214, .12], [158, .35], [262, .25], [36, .3], [199, .8]];
+  let blinkAt = 2, blinkT = -1;
+  function updateSlime(time, dt) {
+    const k = time / 3.2, m0 = MOODS[Math.floor(k) % MOODS.length], m1 = MOODS[(Math.floor(k) + 1) % MOODS.length], f = Math.min(1, (k % 1) * 2.5);
+    let dh = m1[0] - m0[0]; if (dh > 180) dh -= 360; if (dh < -180) dh += 360;
+    const hue = ((m0[0] + dh * f) % 360 + 360) % 360, amp = m0[1] + (m1[1] - m0[1]) * f;
+    sMat.color.setHSL(hue / 360, .9, .68); sMat.emissive.setHSL(hue / 360, .85, .22); halo.material.color.setHSL(hue / 360, .9, .6);
+    shapeSlime(time, amp);
+    const br = Math.sin(time * 1.7) * .03;
+    slime.scale.set(1 - br * .6, 1 + br, 1 - br * .6);
+    slime.rotation.y = Math.sin(time * .5) * .22;
+    const working = Math.floor(k) % MOODS.length === 2 || Math.floor(k) % MOODS.length === 3;
+    spark.visible = working; spark.position.set(Math.cos(time * 3.4) * 3.5, LIFT + .4, Math.sin(time * 3.4) * 3.5);
+    if (blinkT < 0 && time > blinkAt) blinkT = 0;
+    let b = 1;
+    if (blinkT >= 0) { blinkT += dt; b = blinkT < .08 ? 1 - blinkT / .08 * .9 : blinkT < .16 ? .1 + (blinkT - .08) / .08 * .9 : 1; if (blinkT >= .16) { blinkT = -1; blinkAt = time + 2 + Math.random() * 4; } }
+    eyes.forEach(e => { e.scale.y = 1.35 * Math.max(.1, b); });
+    footRing.rotation.z = time * .6;
+  }
+  shapeSlime(0, .12);
   const beamTop = new THREE.Mesh(new THREE.CylinderGeometry(.04, .04, -3.1 - RAIL_Y, 8, 1, true), new THREE.MeshBasicMaterial({ color: C.ai, transparent: true, opacity: .35, blending: THREE.AdditiveBlending, depthWrite: false }));
   beamTop.position.y = (-3.1 + RAIL_Y) / 2; scene.add(beamTop);
 
@@ -784,7 +864,7 @@ body.notes-open .nav { bottom: calc(36vh + 16px); }
     return g;
   }
   const loopRing = orbit([['① 생각', '무엇을 하지?'], ['② 도구', '클릭 · 입력 · 명령'], ['③ 확인', '화면 · 파일 보기'], ['④ 반복', '됐나? 다른 방법?']], 4.2, 5.2, [A], 2.6);
-  const partsRing = orbit([['받아쓰기', 'whisper.cpp'], ['목소리', 'Supertonic'], ['캐릭터', 'VRM'], ['작업 창', '앱'], ['AI 모델', 'Claude'], ['전용 컴퓨터', 'Linux']], 5.6, -1.4, [U, U, G, U, A, A], 2.3);
+  const partsRing = orbit([['받아쓰기', 'whisper.cpp'], ['목소리', 'Supertonic'], ['캐릭터', '닷'], ['작업 창', '앱'], ['AI 모델', 'Claude'], ['전용 컴퓨터', 'Linux']], 5.6, -1.4, [U, U, G, U, A, A], 2.3);
 
   /* ---- one straight rail through the avatar: how-it-works diagrams to the left, the dated history to the right ---- */
   const GAP = 3.6, panels = [], ticks = [], byId = {};
@@ -859,8 +939,8 @@ body.notes-open .nav { bottom: calc(36vh + 16px); }
     const p = screenPanel(tex(shot[0]), 4.4, 900 / 1600, color, shot[0], shot[1]);
     p.position.set(0, 5.6, -1.8); g.add(p);
   }
-  island(-8.4, C.user, [['① 말하기', '마이크'], ['② 받아쓰기', 'whisper.cpp'], ['⑥ 목소리·표정', 'Supertonic · VRM'], ['⑦ 기억', '대화 저장']], ['shots/app-dots.webp', '내 Windows 쪽: 앱 화면']);
-  island(8.4, C.ai, [['④ 일하기', '생각 → 도구 → 확인'], ['Agent SDK', 'Claude Opus 5.5'], ['도구', '명령 · 파일 · 화면'], ['화면 :7', 'Chrome · 엑셀']], ['shots/live-calc.webp', '자비스 Linux 쪽: 자기 화면']);
+  island(-8.4, C.user, [['① 말하기', '마이크'], ['② 받아쓰기', 'whisper.cpp'], ['⑥ 목소리·캐릭터', 'Supertonic · 닷'], ['⑦ 기억', '대화 저장']], ['shots/app-dots.webp', '내 Windows 쪽: 앱 화면']);
+  island(8.4, C.ai, [['④ 일하기', '생각 → 도구 → 확인'], ['에이전트', 'AI 모델 + 도구 반복'], ['도구', '명령 · 파일 · 화면'], ['화면 :7', 'Chrome · 엑셀']], ['shots/live-calc.webp', '자비스 Linux 쪽: 자기 화면']);
   const bridgeCurve = new THREE.CatmullRomCurve3([new THREE.Vector3(-4.6, 1.2, 1.6), new THREE.Vector3(0, 2.2, 1.6), new THREE.Vector3(4.6, 1.2, 1.6)]);
   arch.add(new THREE.Mesh(new THREE.TubeGeometry(bridgeCurve, 64, .07, 8, false), new THREE.MeshBasicMaterial({ color: C.gate })));
   arch.add(new THREE.Mesh(new THREE.TubeGeometry(bridgeCurve, 64, .28, 8, false), new THREE.MeshBasicMaterial({ color: C.gate, transparent: true, opacity: .16, blending: THREE.AdditiveBlending, depthWrite: false })));
@@ -941,9 +1021,7 @@ body.notes-open .nav { bottom: calc(36vh + 16px); }
     camera.position.copy(camPos); camera.lookAt(camLook);
 
     if (!reduce) {
-      top.rotation.y = Math.sin(time * .5) * .25;
-      top.userData.ghost.material.opacity = .25 + Math.abs(Math.sin(time * 3.1)) * .18 + (Math.random() < .02 ? .3 : 0);
-      top.userData.ring.rotation.z = time * .6;
+      updateSlime(time, dt);
       loopRing.rotation.y = time * .18; partsRing.rotation.y = -time * .12;
       [loopRing, partsRing].forEach((g, j) => { const u = time * (j ? -.5 : .7); g.userData.dot.position.set(Math.sin(u) * g.userData.radius, 0, Math.cos(u) * g.userData.radius); });
       panels.forEach((p, j) => {
