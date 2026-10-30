@@ -95,7 +95,7 @@ code { font-family: var(--mono); font-size: .86em; color: var(--ai); }
 .slide.hero > header, .slide.statement > header { top: 50%; translate: 0 -50%; gap: 18px; }
 .hero h1 { font-family: var(--wide); font-size: clamp(3rem, 10vw, 8.5rem); letter-spacing: .08em; line-height: 1; background: linear-gradient(100deg, #fff 10%, var(--ai) 55%, var(--gate) 95%);
   -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 0 28px rgba(148,166,255,.35)); }
-.hero .kr { font-family: var(--display); font-size: clamp(1.6rem, 3.4vw, 2.8rem); line-height: 1.25; max-width: 18ch; }
+.hero .kr { font-family: var(--display); font-size: clamp(1.6rem, 3.4vw, 2.8rem); line-height: 1.25; max-width: 24ch; }
 .hero .kr em, .statement em { font-style: normal; color: var(--ai); }
 .hero .keys { font-family: var(--mono); font-size: 12px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 6px 14px; }
 .hero kbd { border: 1px solid var(--line); border-radius: 4px; padding: 0 6px; color: var(--text); font-family: var(--mono); }
@@ -155,7 +155,7 @@ body.notes-open .nav { bottom: calc(36vh + 16px); }
   </header>
   <aside class="notes"><ul>
     <li>3주 동안 만든 개인 AI 비서 자비스를 소개합니다.</li>
-    <li>순서: 무엇을 하는지 → 어떻게 동작하는지(프로그램과 원리) → 만들면서 막힌 곳 → 10월 29일에 구조를 통째로 바꾼 이유.</li>
+    <li>순서: 지금 무엇을 하는지(데모) → 3주 동안 막힌 곳 → 10월 29일에 구조를 통째로 바꾼 이유 → 지금 구조와 원리 → 안전장치 → 배운 점.</li>
     <li>뒤의 캐릭터와 화면은 전부 실제 자비스에서 가져온 것입니다.</li>
   </ul></aside>
 </section>
@@ -167,7 +167,62 @@ body.notes-open .nav { bottom: calc(36vh + 16px); }
     <li>요청 한 문장: 화면의 Chrome으로 네이버 서울 날씨를 보고, 시간대별 기온과 강수 확률을 엑셀로 정리하고, 열어서 확인해.</li>
     <li>자비스가 한 일: 메모 확인 → 주소창에 검색 → Enter가 안 먹힌 걸 화면으로 보고 다시 누름 → 강수 탭 클릭 → 엑셀 생성 → 코드로 다시 읽어 검증 → Calc로 열어서 확인.</li>
     <li>스스로 한 일: 정확한 값을 읽으려고 Playwright 설치, 화면의 Chrome에 붙어서 숫자 직접 읽기, 강수 확률 50% 이상 빨간 칸과 요약 시트, 재사용 스크립트 저장, 요령을 메모에 기록.</li>
-    <li>뒤 화면이 그때 만든 서울날씨.xlsx입니다.</li>
+    <li>뒤 화면이 그때 만든 서울날씨.xlsx입니다. 처음부터 이렇게 됐던 건 아닙니다. 여기까지 온 3주를 보겠습니다.</li>
+  </ul></aside>
+</section>
+
+<section class="slide" data-t="3주 타임라인" data-cam="road">
+  <header><span class="kicker u">개발 과정</span><h2>3주, AI 모델 다섯 번</h2></header>
+  <div class="cap"><span class="u"><b>10.06</b>내 PC의 Qwen 35B</span><span><b>10.09</b>Flash-Next 125B</span><span class="a"><b>10.14</b>Claude API</span><span class="ok"><b>10.29</b>Agent SDK로 전환</span></div>
+  <aside class="notes"><ul>
+    <li>레일 위 화면들이 날짜순 실제 스크린샷입니다.</li>
+    <li>10.06 llama.cpp로 Qwen 35B, Goose + 정책 게이트웨이. 10.07 VRM 캐릭터와 호출어, Qwen 9B(94.6 tok/s). 10.08 AI 전용 Linux.</li>
+    <li>10.09 작업 창, Flash-Next 125B(MoE, 활성 6B, Strata 엔진, 47.7 tok/s). 10.10 캐릭터 배치. 10.14 Claude API(claude_bridge로 OpenAI 형식 변환), 연기 태그.</li>
+    <li>10.29 진단 후 Agent SDK로 전환. 그 전까지 가장 크게 막혔던 두 장면을 먼저 보겠습니다.</li>
+  </ul></aside>
+</section>
+
+<section class="slide" data-t="고비 1" data-cam="panel:vision">
+  <header><span class="kicker bad">고비 1 · 10.09</span><h2>AI가 그림을 못 본다고 했다</h2></header>
+  <div class="cap"><span class="bad"><b>171.9초</b>고치기 전, 실패</span><span class="ok"><b>18.6초</b>고친 뒤, 성공</span><span><b>원인</b>이미지가 "omitted"라는 글자로 바뀌어 전달</span></div>
+  <aside class="notes"><ul>
+    <li>증상: 그림이나 차트를 확인하라고 시키면 계속 실패.</li>
+    <li>원인: Goose는 자기 목록에 없는 모델에게 이미지를 보내지 않고 "omitted(생략)"라는 문장으로 바꿔 보냄.</li>
+    <li>해결: 시작할 때마다 자비스 모델을 그 목록에 등록. 뒤 화면은 고친 뒤 자비스가 Linux에서 직접 그린 막대그래프.</li>
+    <li>교훈: 중간 프레임워크가 무엇을 바꿔 보내는지 직접 열어 봐야 한다.</li>
+  </ul></aside>
+</section>
+
+<section class="slide" data-t="고비 2" data-cam="panel:fail">
+  <header><span class="kicker bad">고비 2 · 10.09</span><h2>같은 실패를 160번 반복했다</h2></header>
+  <div class="cap"><span class="bad"><b>160번</b>막힌 도구에 같은 시도</span><span class="ok"><b>3번</b>연속 실패하면 멈춤</span><span><b>숨기지 않기</b>실패를 화면에 표시</span></div>
+  <aside class="notes"><ul>
+    <li>"모델 바꾸는 중" 표시가 지워지지 않아 모든 도구가 막혔는데, 모델은 그걸 모르고 같은 호출을 160번 반복.</li>
+    <li>수정: 같은 실패 3번이면 반복을 멈추고, 활동 카드에 실패를 그대로 표시(오른쪽 화면).</li>
+    <li>같은 날 클릭 위치를 보여주는 커서와 클릭 링도 넣음(왼쪽 화면).</li>
+  </ul></aside>
+</section>
+
+<section class="slide" data-t="10.29 진단" data-cam="panel:prompt">
+  <header><span class="kicker g">10.29 · 진단</span><h2>똑똑한 모델이 왜 일을 못 했나</h2></header>
+  <div class="cap"><span class="bad"><b>low</b>생각 깊이</span><span class="bad"><b>모순</b>"너는 goose" ↔ "너는 자비스"</span><span class="bad"><b>24%</b>지시문 중 캐릭터 팔 각도</span><span class="bad"><b>55개</b>도구, 설명 22,990자</span></div>
+  <aside class="notes"><ul>
+    <li>사용자 불만: "도구 활용도가 너무 부족하고, 자기가 할 일을 이해하고 해주는 능력이 너무 부족함".</li>
+    <li>실제 요청을 가로채 열어 보니: 모델 sonnet, effort low. 지시문 첫 줄 "You are goose", "Use Markdown" ↔ 자비스 규칙 "마크다운 없이 짧게".</li>
+    <li>지시문 5,939자 중 24%가 캐릭터 팔 각도. 일하는 법은 금지 목록뿐. 도구 55개, 같은 일을 하는 도구 여러 벌.</li>
+    <li>AI 전용 컴퓨터인데 명령마다 셸이 새로 떠서 상태가 끊기고, 설치·다운로드·삭제도 매번 승인.</li>
+    <li>결론: 문제는 모델이 아니라 모델에게 준 설정·지시문·도구.</li>
+  </ul></aside>
+</section>
+
+<section class="slide" data-t="10.29 전환" data-cam="panel:transplant">
+  <header><span class="kicker ok">10.29 · 전환</span><h2>규칙을 늘리는 대신 <em>컴퓨터를</em> 줬다</h2></header>
+  <div class="cap"><span class="ok"><b>안</b>명령 · 설치 · 파일은 묻지 않음</span><span class="g"><b>밖</b>전송 · 결제 · 로그인 직전에만 질문</span><span class="a"><b>CLAUDE.md</b>금지 목록 대신 설명서</span></div>
+  <aside class="notes"><ul>
+    <li>순서: Linux 전체 백업(3.34GB) → jarvis 계정에 sudo → Agent SDK 설치 → computer 도구 → ask_user 도구 → CLAUDE.md → Opus 5.5 · high → 앱 연결.</li>
+    <li>Windows 쪽 어댑터 LinuxAgent가 예전 ACPAgent와 같은 인터페이스를 흉내 내서 앱의 나머지는 그대로.</li>
+    <li>설정 하나(JARVIS_AGENT_BACKEND=goose)로 예전 방식으로 돌아갈 수 있음. 자동 시험 311개 통과.</li>
+    <li>이렇게 바뀐 지금 구조를 다음 장부터 봅니다.</li>
   </ul></aside>
 </section>
 
@@ -278,60 +333,6 @@ body.notes-open .nav { bottom: calc(36vh + 16px); }
     <li>VRM = glTF + 사람 뼈대 규칙 + 표정(blend shape) + 스프링 본 + MToon 셰이더. three-vrm이 읽고 three.js가 그립니다.</li>
     <li>입모양: 재생 중인 목소리 크기만큼 입을 벌리고, 0.07~0.13초마다 아·이·우·에·오 중 하나로 바꿉니다. 눈은 2~6초마다 0.16초 깜박임.</li>
     <li>연기 태그: 모델이 문장 앞에 [[기쁨 손흔들기]]를 쓰면 그 문장 재생 순간 표정 + 동작. 동작은 뼈 각도 키프레임 + slerp 보간, 각도 제한으로 팔이 몸을 뚫지 않게.</li>
-  </ul></aside>
-</section>
-
-<section class="slide" data-t="3주 타임라인" data-cam="road">
-  <header><span class="kicker u">개발 과정</span><h2>3주, AI 모델 다섯 번</h2></header>
-  <div class="cap"><span class="u"><b>10.06</b>내 PC의 Qwen 35B</span><span><b>10.09</b>Flash-Next 125B</span><span class="a"><b>10.14</b>Claude API</span><span class="ok"><b>10.29</b>Agent SDK로 전환</span></div>
-  <aside class="notes"><ul>
-    <li>레일 위 화면들이 날짜순 실제 스크린샷입니다.</li>
-    <li>10.06 llama.cpp로 Qwen 35B, Goose + 정책 게이트웨이. 10.07 VRM 캐릭터와 호출어, Qwen 9B(94.6 tok/s). 10.08 AI 전용 Linux.</li>
-    <li>10.09 작업 창, Flash-Next 125B(MoE, 활성 6B, Strata 엔진, 47.7 tok/s). 10.10 캐릭터 배치. 10.14 Claude API(claude_bridge로 OpenAI 형식 변환), 연기 태그.</li>
-    <li>10.29 진단 후 Agent SDK로 전환. 그사이 자동 시험은 166개 → 311개.</li>
-  </ul></aside>
-</section>
-
-<section class="slide" data-t="고비 1" data-cam="panel:vision">
-  <header><span class="kicker bad">고비 1 · 10.09</span><h2>AI가 그림을 못 본다고 했다</h2></header>
-  <div class="cap"><span class="bad"><b>171.9초</b>고치기 전, 실패</span><span class="ok"><b>18.6초</b>고친 뒤, 성공</span><span><b>원인</b>이미지가 "omitted"라는 글자로 바뀌어 전달</span></div>
-  <aside class="notes"><ul>
-    <li>증상: 그림이나 차트를 확인하라고 시키면 계속 실패.</li>
-    <li>원인: Goose는 자기 목록에 없는 모델에게 이미지를 보내지 않고 "omitted(생략)"라는 문장으로 바꿔 보냄.</li>
-    <li>해결: 시작할 때마다 자비스 모델을 그 목록에 등록. 뒤 화면은 고친 뒤 자비스가 Linux에서 직접 그린 막대그래프.</li>
-    <li>교훈: 중간 프레임워크가 무엇을 바꿔 보내는지 직접 열어 봐야 한다.</li>
-  </ul></aside>
-</section>
-
-<section class="slide" data-t="고비 2" data-cam="panel:fail">
-  <header><span class="kicker bad">고비 2 · 10.09</span><h2>같은 실패를 160번 반복했다</h2></header>
-  <div class="cap"><span class="bad"><b>160번</b>막힌 도구에 같은 시도</span><span class="ok"><b>3번</b>연속 실패하면 멈춤</span><span><b>숨기지 않기</b>실패를 화면에 표시</span></div>
-  <aside class="notes"><ul>
-    <li>"모델 바꾸는 중" 표시가 지워지지 않아 모든 도구가 막혔는데, 모델은 그걸 모르고 같은 호출을 160번 반복.</li>
-    <li>수정: 같은 실패 3번이면 반복을 멈추고, 활동 카드에 실패를 그대로 표시(오른쪽 화면).</li>
-    <li>같은 날 클릭 위치를 보여주는 커서와 클릭 링도 넣음(왼쪽 화면).</li>
-  </ul></aside>
-</section>
-
-<section class="slide" data-t="10.29 진단" data-cam="panel:prompt">
-  <header><span class="kicker g">10.29 · 진단</span><h2>똑똑한 모델이 왜 일을 못 했나</h2></header>
-  <div class="cap"><span class="bad"><b>low</b>생각 깊이</span><span class="bad"><b>모순</b>"너는 goose" ↔ "너는 자비스"</span><span class="bad"><b>24%</b>지시문 중 캐릭터 팔 각도</span><span class="bad"><b>55개</b>도구, 설명 22,990자</span></div>
-  <aside class="notes"><ul>
-    <li>사용자 불만: "도구 활용도가 너무 부족하고, 자기가 할 일을 이해하고 해주는 능력이 너무 부족함".</li>
-    <li>실제 요청을 가로채 열어 보니: 모델 sonnet, effort low. 지시문 첫 줄 "You are goose", "Use Markdown" ↔ 자비스 규칙 "마크다운 없이 짧게".</li>
-    <li>지시문 5,939자 중 24%가 캐릭터 팔 각도. 일하는 법은 금지 목록뿐. 도구 55개, 같은 일을 하는 도구 여러 벌.</li>
-    <li>AI 전용 컴퓨터인데 명령마다 셸이 새로 떠서 상태가 끊기고, 설치·다운로드·삭제도 매번 승인.</li>
-    <li>결론: 문제는 모델이 아니라 모델에게 준 설정·지시문·도구.</li>
-  </ul></aside>
-</section>
-
-<section class="slide" data-t="10.29 전환" data-cam="panel:transplant">
-  <header><span class="kicker ok">10.29 · 전환</span><h2>규칙을 늘리는 대신 <em>컴퓨터를</em> 줬다</h2></header>
-  <div class="cap"><span class="ok"><b>안</b>명령 · 설치 · 파일은 묻지 않음</span><span class="g"><b>밖</b>전송 · 결제 · 로그인 직전에만 질문</span><span class="a"><b>CLAUDE.md</b>금지 목록 대신 설명서</span></div>
-  <aside class="notes"><ul>
-    <li>순서: Linux 전체 백업(3.34GB) → jarvis 계정에 sudo → Agent SDK 설치 → computer 도구 → ask_user 도구 → CLAUDE.md → Opus 5.5 · high → 앱 연결.</li>
-    <li>Windows 쪽 어댑터 LinuxAgent가 예전 ACPAgent와 같은 인터페이스를 흉내 내서 앱의 나머지는 그대로.</li>
-    <li>설정 하나(JARVIS_AGENT_BACKEND=goose)로 예전 방식으로 돌아갈 수 있음. 자동 시험 311개 통과.</li>
   </ul></aside>
 </section>
 
@@ -655,16 +656,13 @@ body.notes-open .nav { bottom: calc(36vh + 16px); }
   const T = '#eeebe5', M = '#8e97a8', U = '#f2b84b', A = '#94a6ff', G = '#ff5d8f', K = '#5fd49b', B = '#ff7262';
   const CH = [
     // how-it-works chapters: diagrams on the rail to the left of the avatar
-    { id: 'programs', rail: -1, items: [{ text: [['말소리 감지   Silero VAD v5', U, 30], ['받아쓰기     whisper.cpp · large-v3-turbo', U, 30], ['앱           Electron 44', U, 30], ['서버         Python · Starlette :8180', U, 30], ['AI 모델      Claude Opus 5.5', A, 30], ['에이전트     Claude Agent SDK 0.2.174', A, 30], ['자기 컴퓨터  WSL2 · Ubuntu', A, 30], ['가상 화면    Xvfb :7 · openbox', A, 30], ['화면 조작    xdotool · ImageMagick', A, 30], ['화면 송출    x11vnc · noVNC 1.7', A, 30], ['목소리       Supertonic 3', U, 30], ['캐릭터       three.js · three-vrm', G, 30]], title: 'jarvis · 사용한 프로그램' }], color: C.ai, date: '원리 0' },
     { id: 'listen', rail: -1, items: [{ diag: { title: '원리 1 · 듣기', rows: [[['마이크', '1초에 16,000개 숫자', U], ['Silero VAD', '0.03초마다 말인가?', U], ['말 구간만', '앞 0.3초 포함', U]], [['스펙트로그램', '시간 × 높낮이', A], ['인코더', '소리 특징', A], ['디코더', '토큰을 하나씩', A], ['"자비스, 날씨…"', '헛문장 지우기', K]]], notes: [['whisper.cpp b5130 · CUDA · large-v3-turbo q5_0 (574MB)', M], ['turbo: 디코더 층 32 → 4  ·  q5_0: 숫자를 5비트로', M]] } }], color: C.user, date: '원리 1' },
-    { id: 'app', rail: -1, items: [{ diag: { title: '원리 2 · 앱과 서버', rows: [[['Electron 창', 'Chromium + Node.js', U], ['WebSocket', '양방향 실시간', G], ['Python 서버', '127.0.0.1:8180', U]], [['받아쓴 글', '', U], ['호출어 규칙', '"(야) 자비스(야)"로 시작?', G], ['에이전트로', '대답 후 20초는 생략 가능', A]]], notes: [['"작업 멈춰" → AI를 거치지 않고 서버가 바로 중단', B]] } }], color: C.user, date: '원리 2' },
-    { id: 'model', rail: -1, items: [{ diag: { title: '원리 3 · AI 모델', rows: [[['글', '지시문 + 대화 + 결과', T], ['토큰', '조각 → 번호', A], ['모델', '확률 계산', A], ['다음 토큰', '하나 고르기', K]]], loop: true, notes: [['고른 토큰을 붙이고 다시 예측  →  반복해서 문장이 됨', T], ['내 PC: llama.cpp · GGUF · 4비트/2비트   |   Claude: API · 토큰당 요금', M], ['컨텍스트 20만 토큰   ·   effort = 대답 전에 생각하는 양', M]] } }], color: C.ai, date: '원리 3' },
-    { id: 'toolloop', rail: -1, items: [{ diag: { title: '원리 4 · 도구 호출', rows: [[['도구 목록', '이름·설명·스키마', M], ['AI', 'tool_use 작성', A], ['엔진', '실제로 실행', U], ['tool_result', '글 · 스크린샷', K]]], loop: true, notes: [['{"name":"computer","input":{"action":"click","x":640,"y":360}}', A], ['예전: Goose → 게이트웨이(MCP) → 55개 도구', B], ['지금: Bash · Read · Write · Edit · Web… + computer · ask_user', K]] } }], color: C.ai, date: '원리 4' },
-    { id: 'sdk', rail: -1, items: [{ diag: { title: '원리 5 · 에이전트 엔진', rows: [[['Windows 앱', 'JSON 한 줄', U], ['wsl.exe', '--serve', M], ['jarvis_agent.py', 'Linux 안', A], ['Agent SDK', 'Claude Code 엔진', A]], [['Claude API', 'Opus 5.5 · high', A], ['도구 실행', '묻지 않고', A], ['보고 한 줄씩', 'text · tool · done', K], ['ask_user', '밖으로 나가기 전', G]]], notes: [['지시문 = Claude Code 기본 + CLAUDE.md(정체성 · 컴퓨터 · 일하는 법 · 경계)', M]] } }], color: C.ai, date: '원리 5' },
-    { id: 'linux', rail: -1, items: [{ diag: { title: '원리 6 · 자기 컴퓨터', rows: [[['Windows 11', '내 컴퓨터', U], ['WSL2', '가벼운 가상 머신', A], ['Ubuntu', 'Jarvis-Ubuntu', A]], [['Xvfb :7', '모니터 없는 화면', A], ['openbox', '창 관리자', A], ['Chrome · Office', 'CDP 9333', A]], [['x11vnc', 'VNC :5907', G], ['noVNC 1.7', '웹에서 VNC', G], ['앱 패널', '보기 · 직접 조작', U]]], notes: [] } }], color: C.ai, date: '원리 6' },
-    { id: 'computer', rail: -1, items: [{ diag: { title: '원리 7 · 화면 조작', rows: [[['찍기', '1600×900', A], ['줄이기', '1280×720', A], ['AI 판단', '(640, 300)', K]], [['×1.25', '(800, 375)', U], ['xdotool', '클릭 · 키 · 스크롤', A], ['0.6초 뒤', '다시 찍기', K]]], notes: [['한글 입력: xclip 클립보드 → Ctrl+V', M], ['정확한 값: Chrome CDP로 페이지 직접 읽기', M]] } }], color: C.ai, date: '원리 7' },
-    { id: 'voice', rail: -1, items: [{ diag: { title: '원리 8 · 목소리', rows: [[['AI 답', '흘러오는 글', A], ['문장 나누기', '태그는 따로', U], ['길이 예측', '', U]], [['음색 스타일', 'JarvisBlend', G], ['6단계 다듬기', 'flow matching', U], ['파형 → 재생', '+ 표정 · 동작', K]]], notes: [['Supertonic 3 · ONNX · CPU 4스레드', M], ['8~9초 음성을 2.44초에 생성  ·  짧은 문장 1.07초', K]] } }], color: C.user, date: '원리 8' },
-    { id: 'vrm', rail: -1, items: [{ diag: { title: '원리 9 · 캐릭터', rows: [[['VRM 파일', '뼈대 · 표정 · 재질', G], ['three-vrm', '파일 읽기', G], ['three.js', '매 프레임 그리기', G]], [['목소리 크기', '→ 입 벌림', U], ['모음 바꾸기', '0.07~0.13초', U], ['연기 태그', '표정 + 동작 21가지', A]]], notes: [['눈 깜박임 2~6초마다 · 동작은 뼈 각도 키프레임 + 보간', M]] } }], color: C.gate, date: '원리 9' },
+    { id: 'toolloop', rail: -1, items: [{ diag: { title: '원리 2 · 도구 호출', rows: [[['도구 목록', '이름·설명·스키마', M], ['AI', 'tool_use 작성', A], ['엔진', '실제로 실행', U], ['tool_result', '글 · 스크린샷', K]]], loop: true, notes: [['{"name":"computer","input":{"action":"click","x":640,"y":360}}', A], ['예전: Goose → 게이트웨이(MCP) → 55개 도구', B], ['지금: Bash · Read · Write · Edit · Web… + computer · ask_user', K]] } }], color: C.ai, date: '원리 2' },
+    { id: 'sdk', rail: -1, items: [{ diag: { title: '원리 3 · 에이전트 엔진', rows: [[['Windows 앱', 'JSON 한 줄', U], ['wsl.exe', '--serve', M], ['jarvis_agent.py', 'Linux 안', A], ['Agent SDK', 'Claude Code 엔진', A]], [['Claude API', 'Opus 5.5 · high', A], ['도구 실행', '묻지 않고', A], ['보고 한 줄씩', 'text · tool · done', K], ['ask_user', '밖으로 나가기 전', G]]], notes: [['지시문 = Claude Code 기본 + CLAUDE.md(정체성 · 컴퓨터 · 일하는 법 · 경계)', M]] } }], color: C.ai, date: '원리 3' },
+    { id: 'linux', rail: -1, items: [{ diag: { title: '원리 4 · 자기 컴퓨터', rows: [[['Windows 11', '내 컴퓨터', U], ['WSL2', '가벼운 가상 머신', A], ['Ubuntu', 'Jarvis-Ubuntu', A]], [['Xvfb :7', '모니터 없는 화면', A], ['openbox', '창 관리자', A], ['Chrome · Office', 'CDP 9333', A]], [['x11vnc', 'VNC :5907', G], ['noVNC 1.7', '웹에서 VNC', G], ['앱 패널', '보기 · 직접 조작', U]]], notes: [] } }], color: C.ai, date: '원리 4' },
+    { id: 'computer', rail: -1, items: [{ diag: { title: '원리 5 · 화면 조작', rows: [[['찍기', '1600×900', A], ['줄이기', '1280×720', A], ['AI 판단', '(640, 300)', K]], [['×1.25', '(800, 375)', U], ['xdotool', '클릭 · 키 · 스크롤', A], ['0.6초 뒤', '다시 찍기', K]]], notes: [['한글 입력: xclip 클립보드 → Ctrl+V', M], ['정확한 값: Chrome CDP로 페이지 직접 읽기', M]] } }], color: C.ai, date: '원리 5' },
+    { id: 'voice', rail: -1, items: [{ diag: { title: '원리 6 · 목소리', rows: [[['AI 답', '흘러오는 글', A], ['문장 나누기', '태그는 따로', U], ['길이 예측', '', U]], [['음색 스타일', 'JarvisBlend', G], ['6단계 다듬기', 'flow matching', U], ['파형 → 재생', '+ 표정 · 동작', K]]], notes: [['Supertonic 3 · ONNX · CPU 4스레드', M], ['8~9초 음성을 2.44초에 생성  ·  짧은 문장 1.07초', K]] } }], color: C.user, date: '원리 6' },
+    { id: 'vrm', rail: -1, items: [{ diag: { title: '원리 7 · 캐릭터', rows: [[['VRM 파일', '뼈대 · 표정 · 재질', G], ['three-vrm', '파일 읽기', G], ['three.js', '매 프레임 그리기', G]], [['목소리 크기', '→ 입 벌림', U], ['모음 바꾸기', '0.07~0.13초', U], ['연기 태그', '표정 + 동작 21가지', A]]], notes: [['눈 깜박임 2~6초마다 · 동작은 뼈 각도 키프레임 + 보간', M]] } }], color: C.gate, date: '원리 7' },
     { id: 'start', items: [{ text: [['$ START-JARVIS.bat', M], ['[모델]  llama.cpp · Qwen 35B (내 그래픽카드)', T], ['[반복]  Goose 1.53 + 안전 관문(게이트웨이)', T], ['[조작]  브라우저 · Windows 프로그램 조작', T], ['[음성]  whisper.cpp 받아쓰기', T], ['[음성]  Supertonic 3 목소리', T], ['[막힘]  한글 입력이 깨짐 → 직접 다시 만듦', B], ['[화면]  127.0.0.1:8180  준비 완료', K]], title: 'jarvis · 2026-10-06' }], color: C.user, date: '10.06' },
     { id: 'body', items: [{ text: [['비서 창   항상 화면 위', T], ['캐릭터    VRM 메이드', G], ['호출어    "자비스"', G], ['모델      Qwen 9B', A], ['속도      94.6 tok/s', K], ['시험      21개 중 19개 통과', K], ['램        32 → 64 GB', U], ['!! PC 멈춤 → 드라이버 메모리 누수', B]], title: 'jarvis · 2026-10-07' }], color: C.user, date: '10.07' },
     { id: 'linuxfirst', items: [{ src: 'shots/linux-first.webp', a: 900 / 1600, cap: '10.08 19:25 · 자비스 컴퓨터의 첫 화면' }], color: C.ai, date: '10.08' },
